@@ -1,0 +1,1212 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ecl1pse — Full-stack · ИИ · GameDev</title>
+<meta name="description" content="Проекты на стыке веб-разработки, нейросетей и геймдева. NEON TETRIS, CaseBattle, Telegram-бот с LLM, ИИ для CS2.">
+<meta name="author" content="ecl1pse">
+<meta name="theme-color" content="#0a0a14">
+<!-- Open Graph -->
+<meta property="og:type" content="website">
+<meta property="og:title" content="ecl1pse — Full-stack · ИИ · GameDev">
+<meta property="og:description" content="Проекты на стыке веб-разработки, нейросетей и геймдева.">
+<meta name="twitter:card" content="summary">
+<!-- Favicon: логотип-затмение в SVG (data URI) -->
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%234f7cff'/%3E%3Cstop offset='0.5' stop-color='%239b4dff'/%3E%3Cstop offset='1' stop-color='%23d946ef'/%3E%3C/linearGradient%3E%3C/defs%3E%3Ccircle cx='50' cy='50' r='48' fill='%230a0a14'/%3E%3Ccircle cx='44' cy='50' r='34' fill='url(%23g)'/%3E%3Ccircle cx='58' cy='44' r='30' fill='%230a0a14'/%3E%3C/svg%3E">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --bg: #0a0a14;
+    --card: #12121f;
+    --text: #eef0f7;
+    --muted: #8b8fa3;
+    --blue: #4f7cff;
+    --violet: #9b4dff;
+    --pink: #d946ef;
+    --green: #4ade80;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.6;
+    overflow-x: hidden;
+    position: relative;
+  }
+
+  body::before {
+    content: '';
+    position: fixed;
+    top: -300px;
+    left: -200px;
+    width: 700px;
+    height: 700px;
+    background: radial-gradient(circle, rgba(79,124,255,0.18), transparent 65%);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 0;
+    animation: float1 18s ease-in-out infinite;
+  }
+
+  body::after {
+    content: '';
+    position: fixed;
+    bottom: -300px;
+    right: -200px;
+    width: 700px;
+    height: 700px;
+    background: radial-gradient(circle, rgba(155,77,255,0.18), transparent 65%);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 0;
+    animation: float2 22s ease-in-out infinite;
+  }
+
+  @keyframes float1 {
+    0%, 100% { transform: translate(0,0); }
+    50% { transform: translate(80px, 60px); }
+  }
+  @keyframes float2 {
+    0%, 100% { transform: translate(0,0); }
+    50% { transform: translate(-80px, -60px); }
+  }
+
+  .container {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 0 24px;
+    position: relative;
+    z-index: 1;
+  }
+
+  /* HERO */
+  .hero {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    padding: 80px 0;
+  }
+
+  .hero-content { animation: fadeUp 1s ease; }
+
+  .logo {
+    width: 140px;
+    height: 140px;
+    border-radius: 32px;
+    background: radial-gradient(circle at 30% 30%, #16162a, #0a0a14);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 40px;
+    position: relative;
+    border: 1px solid rgba(155,77,255,0.25);
+    box-shadow: 0 20px 60px rgba(120,80,255,0.35),
+                0 0 100px rgba(79,124,255,0.2),
+                inset 0 0 40px rgba(155,77,255,0.1);
+    overflow: hidden;
+  }
+
+  .logo svg {
+    width: 100%;
+    height: 100%;
+    filter: drop-shadow(0 0 20px rgba(155,77,255,0.6));
+  }
+
+  .logo .spin {
+    transform-origin: 50px 50px;
+    animation: spinSlow 20s linear infinite;
+  }
+
+  @keyframes spinSlow {
+    to { transform: rotate(360deg); }
+  }
+
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 16px;
+    border-radius: 100px;
+    background: rgba(79,124,255,0.1);
+    border: 1px solid rgba(155,77,255,0.3);
+    font-size: 13px;
+    color: #b8c0ff;
+    margin-bottom: 24px;
+    font-weight: 500;
+  }
+
+  .badge .dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--green);
+    box-shadow: 0 0 10px var(--green);
+    animation: pulse 2s infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.4; }
+  }
+
+  .nick {
+    font-family: 'SF Mono', 'Consolas', monospace;
+    font-size: 13px;
+    color: var(--muted);
+    letter-spacing: 0.15em;
+    margin-bottom: 12px;
+    text-transform: lowercase;
+  }
+
+  .nick span {
+    background: linear-gradient(90deg, #4f7cff, #9b4dff, #d946ef);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    font-weight: 700;
+  }
+
+  h1 {
+    font-size: clamp(2.2rem, 6vw, 4rem);
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    line-height: 1.05;
+    margin-bottom: 20px;
+    background: linear-gradient(135deg, #ffffff 0%, #c4b5fd 50%, #a78bfa 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .subtitle {
+    font-size: clamp(1rem, 2vw, 1.2rem);
+    color: var(--muted);
+    margin-bottom: 40px;
+    max-width: 620px;
+  }
+
+  .subtitle strong {
+    color: #c4b5fd;
+    font-weight: 600;
+  }
+
+  .btn-group {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+
+  .btn {
+    padding: 15px 30px;
+    border-radius: 14px;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 15px;
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    border: none;
+    cursor: pointer;
+    font-family: inherit;
+  }
+
+  .btn-primary {
+    background: linear-gradient(135deg, #4f7cff, #9b4dff);
+    color: #fff;
+    box-shadow: 0 10px 30px rgba(120,80,255,0.35);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .btn-primary::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, #9b4dff, #d946ef);
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+
+  .btn-primary span { position: relative; z-index: 1; }
+
+  .btn-primary:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 15px 40px rgba(120,80,255,0.55);
+  }
+
+  .btn-primary:hover::before { opacity: 1; }
+
+  .btn-ghost {
+    background: rgba(255,255,255,0.04);
+    color: var(--text);
+    border: 1px solid rgba(155,77,255,0.25);
+  }
+
+  .btn-ghost:hover {
+    background: rgba(155,77,255,0.1);
+    border-color: rgba(155,77,255,0.5);
+    transform: translateY(-3px);
+  }
+
+  section {
+    padding: 100px 0;
+    position: relative;
+  }
+
+  .section-title {
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+    background: linear-gradient(90deg, #4f7cff, #9b4dff);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 14px;
+    font-weight: 700;
+  }
+
+  h2 {
+    font-size: clamp(1.6rem, 4vw, 2.4rem);
+    font-weight: 700;
+    margin-bottom: 48px;
+    letter-spacing: -0.02em;
+  }
+
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 18px;
+  }
+
+  .card {
+    background: var(--card);
+    border: 1px solid rgba(155,77,255,0.12);
+    border-radius: 20px;
+    padding: 28px;
+    transition: all 0.35s cubic-bezier(0.2, 0.8, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(155,77,255,0.6), transparent);
+    opacity: 0;
+    transition: opacity 0.35s;
+  }
+
+  .card:hover {
+    border-color: rgba(155,77,255,0.4);
+    transform: translateY(-6px);
+    box-shadow: 0 20px 40px rgba(79,124,255,0.15);
+    background: #16162a;
+  }
+
+  .card:hover::before { opacity: 1; }
+
+  .card-icon {
+    width: 52px;
+    height: 52px;
+    border-radius: 14px;
+    background: linear-gradient(135deg, rgba(79,124,255,0.2), rgba(155,77,255,0.2));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 26px;
+    margin-bottom: 18px;
+    border: 1px solid rgba(155,77,255,0.2);
+  }
+
+  .card h3 {
+    font-size: 1.05rem;
+    margin-bottom: 8px;
+    font-weight: 600;
+  }
+
+  .card p {
+    font-size: 0.9rem;
+    color: var(--muted);
+    line-height: 1.55;
+  }
+
+  /* ПРОЕКТЫ */
+  .projects-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 22px;
+  }
+
+  .project {
+    background: var(--card);
+    border: 1px solid rgba(155,77,255,0.15);
+    border-radius: 22px;
+    transition: all 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .project::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, #4f7cff, #9b4dff, #d946ef);
+    opacity: 0.6;
+    transition: opacity 0.4s;
+    z-index: 3;
+  }
+
+  .project:hover {
+    border-color: rgba(155,77,255,0.45);
+    transform: translateY(-8px);
+    box-shadow: 0 25px 60px rgba(120,80,255,0.25);
+    background: #16162a;
+  }
+
+  .project:hover::before { opacity: 1; }
+
+  /* ПРЕВЬЮ (SVG) */
+  .project-preview {
+    width: 100%;
+    height: 170px;
+    position: relative;
+    overflow: hidden;
+    border-radius: 22px 22px 0 0;
+    background: #0a0a14;
+    border-bottom: 1px solid rgba(155,77,255,0.1);
+  }
+
+  .project-preview svg {
+    display: block;
+    width: 100%;
+    height: 100%;
+  }
+
+  .project-body {
+    padding: 26px 28px 28px;
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+  }
+
+  .project-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 14px;
+    gap: 12px;
+  }
+
+  .project-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 5px 12px;
+    border-radius: 100px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    width: fit-content;
+  }
+
+  .project-badge.game {
+    background: rgba(0, 242, 255, 0.12);
+    border: 1px solid rgba(0, 242, 255, 0.35);
+    color: #6ff0ff;
+  }
+
+  .project-badge.bot {
+    background: rgba(155, 77, 255, 0.12);
+    border: 1px solid rgba(155, 77, 255, 0.35);
+    color: #c4a1ff;
+  }
+
+  .project-badge.ai {
+    background: rgba(217, 70, 239, 0.12);
+    border: 1px solid rgba(217, 70, 239, 0.35);
+    color: #f0a1ff;
+  }
+
+  .project-badge.fullstack {
+    background: rgba(233, 69, 96, 0.12);
+    border: 1px solid rgba(233, 69, 96, 0.35);
+    color: #ff8fa3;
+  }
+
+  .live-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 5px 11px;
+    border-radius: 100px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    background: rgba(74, 222, 128, 0.1);
+    border: 1px solid rgba(74, 222, 128, 0.35);
+    color: #6ee7a0;
+    flex-shrink: 0;
+  }
+
+  .live-badge .live-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--green);
+    box-shadow: 0 0 8px var(--green);
+    animation: pulse 1.8s infinite;
+  }
+
+  .project h3 {
+    font-size: 1.3rem;
+    font-weight: 700;
+    margin-bottom: 12px;
+    letter-spacing: -0.01em;
+  }
+
+  .project p {
+    font-size: 0.95rem;
+    color: var(--muted);
+    line-height: 1.6;
+    margin-bottom: 20px;
+    flex-grow: 1;
+  }
+
+  .project p .warn {
+    color: #c4a1ff;
+    font-size: 0.85rem;
+    display: inline-block;
+    margin-top: 4px;
+  }
+
+  .project-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-bottom: 18px;
+  }
+
+  .project-tag {
+    padding: 4px 10px;
+    border-radius: 8px;
+    font-size: 11px;
+    font-weight: 600;
+    background: rgba(79, 124, 255, 0.1);
+    border: 1px solid rgba(79, 124, 255, 0.2);
+    color: #a8b8ff;
+  }
+
+  .project-actions {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-top: auto;
+  }
+
+  .btn-project {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 11px 20px;
+    border-radius: 12px;
+    font-size: 13px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: all 0.25s ease;
+    border: none;
+    cursor: pointer;
+    font-family: inherit;
+  }
+
+  .btn-project.primary {
+    background: linear-gradient(135deg, #4f7cff, #9b4dff);
+    color: #fff;
+    box-shadow: 0 6px 20px rgba(120,80,255,0.3);
+  }
+
+  .btn-project.primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 28px rgba(120,80,255,0.5);
+  }
+
+  .btn-project.ghost {
+    background: rgba(255,255,255,0.04);
+    color: var(--text);
+    border: 1px solid rgba(155,77,255,0.25);
+  }
+
+  .btn-project.ghost:hover {
+    background: rgba(155,77,255,0.12);
+    border-color: rgba(155,77,255,0.5);
+    transform: translateY(-2px);
+  }
+
+  .btn-project.disabled {
+    background: rgba(255,255,255,0.03);
+    color: var(--muted);
+    border: 1px solid rgba(255,255,255,0.08);
+    cursor: default;
+    pointer-events: none;
+  }
+
+  /* ФОРМА */
+  .contact-wrapper {
+    display: grid;
+    grid-template-columns: 1fr 1.2fr;
+    gap: 40px;
+    align-items: start;
+  }
+
+  .contact-info h3 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin-bottom: 16px;
+    background: linear-gradient(135deg, #fff, #c4b5fd);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .contact-info p {
+    color: var(--muted);
+    margin-bottom: 28px;
+  }
+
+  .contact-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+
+  .contact-list li {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    color: var(--muted);
+    font-size: 14px;
+  }
+
+  .contact-list .ci {
+    width: 36px;
+    height: 36px;
+    border-radius: 10px;
+    background: linear-gradient(135deg, rgba(79,124,255,0.15), rgba(155,77,255,0.15));
+    border: 1px solid rgba(155,77,255,0.25);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    flex-shrink: 0;
+  }
+
+  .contact-list a {
+    color: #c4b5fd;
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+
+  .contact-list a:hover { color: #fff; }
+
+  .contact-form {
+    background: var(--card);
+    border: 1px solid rgba(155,77,255,0.15);
+    border-radius: 22px;
+    padding: 32px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .contact-form::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, #4f7cff, #9b4dff, #d946ef);
+  }
+
+  .field {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .field label {
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--muted);
+    font-weight: 600;
+  }
+
+  .field input,
+  .field textarea {
+    width: 100%;
+    padding: 14px 16px;
+    border-radius: 12px;
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(155,77,255,0.15);
+    color: var(--text);
+    font-size: 15px;
+    font-family: inherit;
+    transition: all 0.25s;
+    resize: vertical;
+  }
+
+  .field textarea { min-height: 120px; }
+
+  .field input:focus,
+  .field textarea:focus {
+    outline: none;
+    border-color: rgba(155,77,255,0.6);
+    background: rgba(155,77,255,0.05);
+    box-shadow: 0 0 0 4px rgba(155,77,255,0.1);
+  }
+
+  .field input::placeholder,
+  .field textarea::placeholder {
+    color: #52566b;
+  }
+
+  .form-hint {
+    font-size: 12px;
+    color: var(--muted);
+    text-align: center;
+    margin-top: 4px;
+  }
+
+  footer {
+    padding: 48px 0;
+    text-align: center;
+    color: var(--muted);
+    font-size: 0.875rem;
+    border-top: 1px solid rgba(155,77,255,0.1);
+    position: relative;
+    z-index: 1;
+  }
+
+  footer .gradient-text {
+    background: linear-gradient(90deg, #4f7cff, #9b4dff);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    font-weight: 600;
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(40px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .fade-in {
+    opacity: 0;
+    transform: translateY(40px);
+    transition: all 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
+  }
+
+  .fade-in.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  @media (max-width: 700px) {
+    .logo { width: 110px; height: 110px; border-radius: 26px; }
+    section { padding: 70px 0; }
+    .contact-wrapper { grid-template-columns: 1fr; gap: 32px; }
+    .contact-form { padding: 24px; }
+    .project-body { padding: 22px 22px 24px; }
+    .project-preview { height: 140px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="container">
+    <div class="hero-content">
+
+      <div class="logo">
+        <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="eclGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#4f7cff"/>
+              <stop offset="50%" stop-color="#9b4dff"/>
+              <stop offset="100%" stop-color="#d946ef"/>
+            </linearGradient>
+            <radialGradient id="eclGlow">
+              <stop offset="0%" stop-color="#9b4dff" stop-opacity="0.7"/>
+              <stop offset="60%" stop-color="#4f7cff" stop-opacity="0.25"/>
+              <stop offset="100%" stop-color="#4f7cff" stop-opacity="0"/>
+            </radialGradient>
+          </defs>
+          <circle cx="50" cy="50" r="48" fill="url(#eclGlow)"/>
+          <g class="spin">
+            <circle cx="50" cy="50" r="40" fill="none" stroke="url(#eclGrad)" stroke-width="0.6" stroke-dasharray="3 5" opacity="0.7"/>
+          </g>
+          <circle cx="44" cy="50" r="30" fill="url(#eclGrad)"/>
+          <circle cx="60" cy="44" r="28" fill="#0a0a14"/>
+          <circle cx="60" cy="44" r="28" fill="none" stroke="url(#eclGrad)" stroke-width="0.8" opacity="0.5"/>
+        </svg>
+      </div>
+
+      <div class="badge">
+        <span class="dot"></span>
+        Full-stack · ИИ-проекты · GameDev
+      </div>
+
+      <p class="nick">@<span>ecl1pse</span></p>
+      <h1>Привет, я Виктор</h1>
+
+      <p class="subtitle">
+        Делаю проекты на стыке <strong>веб-разработки</strong>, <strong>нейросетей</strong> и <strong>геймдева</strong>. Работаю с DeepSeek, осваиваю Qwen — и это только начало.
+      </p>
+
+      <div class="btn-group">
+        <a href="#projects" onclick="scrollToSection('projects'); return false;" class="btn btn-primary"><span>Мои проекты →</span></a>
+        <a href="#contacts" onclick="scrollToSection('contacts'); return false;" class="btn btn-ghost">Написать мне</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- НАПРАВЛЕНИЯ -->
+<section id="directions">
+  <div class="container">
+    <div class="fade-in">
+      <p class="section-title">Направления</p>
+      <h2>Что я делаю</h2>
+    </div>
+    <div class="grid">
+      <div class="card fade-in">
+        <div class="card-icon">🤖</div>
+        <h3>ИИ-проекты</h3>
+        <p>Создаю сайты, тексты, ботов и утилиты с помощью нейросетей — быстро и качественно.</p>
+      </div>
+      <div class="card fade-in">
+        <div class="card-icon">💻</div>
+        <h3>Веб-разработка</h3>
+        <p>Лендинги, визитки и полноценные веб-приложения с бэкендом на Flask и базами данных.</p>
+      </div>
+      <div class="card fade-in">
+        <div class="card-icon">🎮</div>
+        <h3>Игровые эксперименты</h3>
+        <p>Разрабатываю игры и учу нейросети играть в них — от классики до сложных сценариев.</p>
+      </div>
+      <div class="card fade-in">
+        <div class="card-icon">🧪</div>
+        <h3>ML и Computer Vision</h3>
+        <p>Экспериментирую с YOLO, OpenCV и обучением моделей для реальных задач.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ПРОЕКТЫ -->
+<section id="projects">
+  <div class="container">
+    <div class="fade-in">
+      <p class="section-title">Портфолио</p>
+      <h2>Мои проекты</h2>
+    </div>
+    <div class="projects-grid">
+
+      <!-- NEON TETRIS -->
+      <div class="project fade-in">
+        <div class="project-preview">
+          <svg viewBox="0 0 400 170" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <pattern id="grid-t" width="20" height="20" patternUnits="userSpaceOnUse">
+                <path d="M 20 0 L 0 0 0 20" fill="none" stroke="rgba(155,77,255,0.12)" stroke-width="0.6"/>
+              </pattern>
+              <filter id="glow-t" x="-50%" y="-50%" width="200%" height="200%">
+                <feGaussianBlur stdDeviation="2.5" result="b"/>
+                <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+              </filter>
+              <linearGradient id="bg-t" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0" stop-color="#0a0a14"/>
+                <stop offset="0.5" stop-color="#1a0a2e"/>
+                <stop offset="1" stop-color="#2a0a3e"/>
+              </linearGradient>
+            </defs>
+            <rect width="400" height="170" fill="url(#bg-t)"/>
+            <rect width="400" height="170" fill="url(#grid-t)"/>
+            <g filter="url(#glow-t)" opacity="0.95">
+              <!-- I-piece (cyan) -->
+              <rect x="55" y="25" width="18" height="18" rx="2" fill="#00f2ff"/>
+              <rect x="55" y="45" width="18" height="18" rx="2" fill="#00f2ff"/>
+              <rect x="55" y="65" width="18" height="18" rx="2" fill="#00f2ff"/>
+              <rect x="55" y="85" width="18" height="18" rx="2" fill="#00f2ff"/>
+              <!-- T-piece (violet) -->
+              <rect x="120" y="45" width="18" height="18" rx="2" fill="#9b4dff"/>
+              <rect x="140" y="45" width="18" height="18" rx="2" fill="#9b4dff"/>
+              <rect x="160" y="45" width="18" height="18" rx="2" fill="#9b4dff"/>
+              <rect x="140" y="65" width="18" height="18" rx="2" fill="#9b4dff"/>
+              <!-- L-piece (pink) -->
+              <rect x="205" y="35" width="18" height="18" rx="2" fill="#d946ef"/>
+              <rect x="205" y="55" width="18" height="18" rx="2" fill="#d946ef"/>
+              <rect x="205" y="75" width="18" height="18" rx="2" fill="#d946ef"/>
+              <rect x="225" y="75" width="18" height="18" rx="2" fill="#d946ef"/>
+              <!-- S-piece (green) -->
+              <rect x="290" y="65" width="18" height="18" rx="2" fill="#4ade80"/>
+              <rect x="310" y="65" width="18" height="18" rx="2" fill="#4ade80"/>
+              <rect x="310" y="85" width="18" height="18" rx="2" fill="#4ade80"/>
+              <rect x="330" y="85" width="18" height="18" rx="2" fill="#4ade80"/>
+            </g>
+          </svg>
+        </div>
+        <div class="project-body">
+          <div class="project-header">
+            <span class="project-badge game">🎮 Игра</span>
+            <span class="live-badge"><span class="live-dot"></span>Live</span>
+          </div>
+          <h3>NEON TETRIS</h3>
+          <p>Тетрис с неоновым дизайном и встроенным ИИ, который сам играет. Оценка позиций на несколько шагов вперёд, адаптивная сложность и полноценное управление свайпами на телефоне.</p>
+          <div class="project-tags">
+            <span class="project-tag">JavaScript</span>
+            <span class="project-tag">Canvas</span>
+            <span class="project-tag">AI</span>
+            <span class="project-tag">Web Audio</span>
+          </div>
+          <div class="project-actions">
+            <a href="https://xecl1psex.github.io/neon-tetris/" target="_blank" rel="noopener" class="btn-project primary">
+              🎮 Играть →
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- CASEBATTLE -->
+      <div class="project fade-in">
+        <div class="project-preview">
+          <svg viewBox="0 0 400 170" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <linearGradient id="bg-cb" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0" stop-color="#0a0e14"/>
+                <stop offset="1" stop-color="#162230"/>
+              </linearGradient>
+              <filter id="glow-cb" x="-50%" y="-50%" width="200%" height="200%">
+                <feGaussianBlur stdDeviation="1.8" result="b"/>
+                <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+              </filter>
+              <pattern id="grid-cb" width="16" height="16" patternUnits="userSpaceOnUse">
+                <path d="M 16 0 L 0 0 0 16" fill="none" stroke="rgba(233,69,96,0.08)" stroke-width="0.5"/>
+              </pattern>
+            </defs>
+            <rect width="400" height="170" fill="url(#bg-cb)"/>
+            <rect width="400" height="170" fill="url(#grid-cb)"/>
+
+            <!-- Рулетка сверху -->
+            <g opacity="0.35">
+              <rect x="60" y="8" width="30" height="18" rx="3" fill="#3a7aff"/>
+              <rect x="94" y="8" width="30" height="18" rx="3" fill="#e94560"/>
+              <rect x="128" y="8" width="30" height="18" rx="3" fill="#ff8c00"/>
+              <rect x="162" y="8" width="30" height="18" rx="3" fill="#b03aff"/>
+              <rect x="196" y="8" width="30" height="18" rx="3" fill="#4e9a06"/>
+              <rect x="230" y="8" width="30" height="18" rx="3" fill="#3a7aff"/>
+              <rect x="264" y="8" width="30" height="18" rx="3" fill="#ff8c00"/>
+              <rect x="298" y="8" width="30" height="18" rx="3" fill="#b03aff"/>
+            </g>
+            <!-- Стрелка -->
+            <polygon points="200,32 191,50 209,50" fill="#e94560" filter="url(#glow-cb)"/>
+
+            <!-- Три скина -->
+            <g filter="url(#glow-cb)">
+              <!-- Rare (blue) -->
+              <rect x="42" y="68" width="92" height="88" rx="10" fill="rgba(58,122,255,0.12)" stroke="#3a7aff" stroke-width="1.5"/>
+              <rect x="66" y="98" width="44" height="10" rx="2" fill="#3a7aff"/>
+              <rect x="72" y="108" width="10" height="22" rx="2" fill="#3a7aff"/>
+              <rect x="88" y="108" width="4" height="12" rx="1" fill="#3a7aff"/>
+              <!-- Epic (violet) -->
+              <rect x="154" y="68" width="92" height="88" rx="10" fill="rgba(176,58,255,0.12)" stroke="#b03aff" stroke-width="1.5"/>
+              <rect x="178" y="98" width="44" height="10" rx="2" fill="#b03aff"/>
+              <rect x="184" y="108" width="10" height="22" rx="2" fill="#b03aff"/>
+              <rect x="200" y="108" width="4" height="12" rx="1" fill="#b03aff"/>
+              <!-- Legendary (orange) -->
+              <rect x="266" y="68" width="92" height="88" rx="10" fill="rgba(255,140,0,0.12)" stroke="#ff8c00" stroke-width="1.5"/>
+              <rect x="290" y="98" width="44" height="10" rx="2" fill="#ff8c00"/>
+              <rect x="296" y="108" width="10" height="22" rx="2" fill="#ff8c00"/>
+              <rect x="312" y="108" width="4" height="12" rx="1" fill="#ff8c00"/>
+            </g>
+          </svg>
+        </div>
+        <div class="project-body">
+          <div class="project-header">
+            <span class="project-badge fullstack">🎰 Full-stack</span>
+            <span class="live-badge"><span class="live-dot"></span>Live</span>
+          </div>
+          <h3>CaseBattle</h3>
+          <p>Полноценная веб-игра: открытие кейсов, апгрейд скинов, контракты, продажа, рейтинг, история операций. Собственный бэкенд, база данных и 26 кейсов с разными шансами.<br><span class="warn">⏱ Первый запуск может занять до минуты — сервер просыпается.</span></p>
+          <div class="project-tags">
+            <span class="project-tag">Python</span>
+            <span class="project-tag">Flask</span>
+            <span class="project-tag">SQLite</span>
+            <span class="project-tag">Web Audio</span>
+            <span class="project-tag">Render</span>
+          </div>
+          <div class="project-actions">
+            <a href="https://case-battle.onrender.com" target="_blank" rel="noopener" class="btn-project primary">
+              🎰 Открыть сайт →
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- TELEGRAM BOT -->
+      <div class="project fade-in">
+        <div class="project-preview">
+          <svg viewBox="0 0 400 170" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <linearGradient id="bg-bot" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0" stop-color="#0a0a14"/>
+                <stop offset="0.5" stop-color="#1a1030"/>
+                <stop offset="1" stop-color="#2a1a3e"/>
+              </linearGradient>
+              <filter id="glow-bot" x="-50%" y="-50%" width="200%" height="200%">
+                <feGaussianBlur stdDeviation="1.5" result="b"/>
+                <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+              </filter>
+            </defs>
+            <rect width="400" height="170" fill="url(#bg-bot)"/>
+
+            <!-- Пузырь 1 (user) -->
+            <rect x="30" y="25" width="150" height="38" rx="14" fill="rgba(79,124,255,0.15)" stroke="rgba(79,124,255,0.45)" stroke-width="1.2"/>
+            <text x="48" y="49" fill="#b8c0ff" font-family="monospace" font-size="13">привет, бот 👋</text>
+
+            <!-- Пузырь 2 (bot) -->
+            <rect x="220" y="72" width="150" height="38" rx="14" fill="rgba(155,77,255,0.15)" stroke="rgba(155,77,255,0.45)" stroke-width="1.2"/>
+            <text x="238" y="96" fill="#c4a1ff" font-family="monospace" font-size="13">чем помочь?</text>
+
+            <!-- Пузырь 3 (bot печатает) -->
+            <rect x="220" y="118" width="70" height="32" rx="14" fill="rgba(155,77,255,0.15)" stroke="rgba(155,77,255,0.45)" stroke-width="1.2"/>
+            <circle cx="240" cy="134" r="3.5" fill="#c4a1ff">
+              <animate attributeName="opacity" values="0.25;1;0.25" dur="1.2s" repeatCount="indefinite"/>
+            </circle>
+            <circle cx="254" cy="134" r="3.5" fill="#c4a1ff">
+              <animate attributeName="opacity" values="0.25;1;0.25" dur="1.2s" begin="0.4s" repeatCount="indefinite"/>
+            </circle>
+            <circle cx="268" cy="134" r="3.5" fill="#c4a1ff">
+              <animate attributeName="opacity" values="0.25;1;0.25" dur="1.2s" begin="0.8s" repeatCount="indefinite"/>
+            </circle>
+
+            <!-- Индикатор LLM -->
+            <g filter="url(#glow-bot)" opacity="0.7">
+              <circle cx="345" cy="34" r="4" fill="#4ade80">
+                <animate attributeName="opacity" values="0.4;1;0.4" dur="2s" repeatCount="indefinite"/>
+              </circle>
+              <text x="355" y="38" fill="#4ade80" font-family="monospace" font-size="10">LLM</text>
+            </g>
+          </svg>
+        </div>
+        <div class="project-body">
+          <div class="project-header">
+            <span class="project-badge bot">🤖 Бот</span>
+          </div>
+          <h3>Telegram-бот с локальной LLM</h3>
+          <p>Бот, работающий на собственной нейросети через LM Studio — без внешних API и оплаты. Понимает текст, распознаёт картинки, помнит контекст диалога и корректно обрабатывает длинные ответы.</p>
+          <div class="project-tags">
+            <span class="project-tag">Python</span>
+            <span class="project-tag">Telegram API</span>
+            <span class="project-tag">LM Studio</span>
+            <span class="project-tag">Vision</span>
+          </div>
+          <div class="project-actions">
+            <span class="btn-project disabled">🔒 Приватный проект</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- CS2 AI -->
+      <div class="project fade-in">
+        <div class="project-preview">
+          <svg viewBox="0 0 400 170" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <filter id="glow-cs" x="-50%" y="-50%" width="200%" height="200%">
+                <feGaussianBlur stdDeviation="1.5" result="b"/>
+                <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+              </filter>
+            </defs>
+            <rect width="400" height="170" fill="#1a0a14"/>
+
+            <!-- Сетка-радар -->
+            <g stroke="rgba(217,70,239,0.1)" stroke-width="0.6">
+              <line x1="0" y1="42" x2="400" y2="42"/>
+              <line x1="0" y1="85" x2="400" y2="85"/>
+              <line x1="0" y1="128" x2="400" y2="128"/>
+              <line x1="100" y1="0" x2="100" y2="170"/>
+              <line x1="200" y1="0" x2="200" y2="170"/>
+              <line x1="300" y1="0" x2="300" y2="170"/>
+            </g>
+
+            <!-- Bounding box 1 -->
+            <g filter="url(#glow-cs)">
+              <rect x="65" y="58" width="58" height="72" fill="none" stroke="#00ff88" stroke-width="1.8" stroke-dasharray="5 2"/>
+              <rect x="65" y="42" width="70" height="14" fill="#00ff88" opacity="0.85"/>
+              <text x="70" y="53" fill="#0a0a14" font-family="monospace" font-size="10" font-weight="bold">enemy 0.94</text>
+            </g>
+
+            <!-- Bounding box 2 -->
+            <g filter="url(#glow-cs)">
+              <rect x="255" y="48" width="55" height="65" fill="none" stroke="#00ff88" stroke-width="1.8" stroke-dasharray="5 2"/>
+              <rect x="255" y="32" width="70" height="14" fill="#00ff88" opacity="0.85"/>
+              <text x="260" y="43" fill="#0a0a14" font-family="monospace" font-size="10" font-weight="bold">enemy 0.87</text>
+            </g>
+
+            <!-- Кроссхэйр -->
+            <g stroke="#ff3060" stroke-width="1.8" filter="url(#glow-cs)">
+              <line x1="200" y1="60" x2="200" y2="76"/>
+              <line x1="200" y1="94" x2="200" y2="110"/>
+              <line x1="184" y1="85" x2="196" y2="85"/>
+              <line x1="204" y1="85" x2="216" y2="85"/>
+              <circle cx="200" cy="85" r="2" fill="#ff3060"/>
+            </g>
+
+            <!-- Индикатор FPS/детекции -->
+            <g opacity="0.7">
+              <text x="14" y="160" fill="#00ff88" font-family="monospace" font-size="10">YOLO · 60 FPS · 2 detections</text>
+            </g>
+          </svg>
+        </div>
+        <div class="project-body">
+          <div class="project-header">
+            <span class="project-badge ai">🧠 ML-эксперимент</span>
+          </div>
+          <h3>ИИ учится играть в CS2</h3>
+          <p>Экспериментальный проект: обучаю нейросеть самостоятельно играть в шутер. YOLO распознаёт врагов на экране, а отдельная модель пытается управлять движением. Работа над навигацией ещё продолжается.</p>
+          <div class="project-tags">
+            <span class="project-tag">Python</span>
+            <span class="project-tag">YOLO</span>
+            <span class="project-tag">OpenCV</span>
+            <span class="project-tag">Reinforcement Learning</span>
+          </div>
+          <div class="project-actions">
+            <span class="btn-project disabled">🚧 В разработке</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- КОНТАКТЫ -->
+<section id="contacts">
+  <div class="container">
+    <div class="fade-in">
+      <p class="section-title">Контакты</p>
+      <h2>Давайте свяжемся</h2>
+    </div>
+
+    <div class="contact-wrapper">
+      <div class="contact-info fade-in">
+        <h3>Есть идея или задача?</h3>
+        <p>Напишите пару слов — отвечу в течение дня. Опишите, что нужно сделать, и я предложу решение.</p>
+        <ul class="contact-list">
+          <li>
+            <div class="ci">📩</div>
+            <span><a href="mailto:ecl1pse.dev@mail.ru">ecl1pse.dev@mail.ru</a></span>
+          </li>
+          <li>
+            <div class="ci">⚡</div>
+            <span>Быстрый ответ в течение 24 часов</span>
+          </li>
+          <li>
+            <div class="ci">🤝</div>
+            <span>Работаю с проектами любого масштаба</span>
+          </li>
+        </ul>
+      </div>
+
+      <form class="contact-form fade-in" onsubmit="sendMessage(event)">
+        <div class="field">
+          <label for="name">Ваше имя</label>
+          <input type="text" id="name" placeholder="Как к вам обращаться" required>
+        </div>
+        <div class="field">
+          <label for="email">Email для ответа</label>
+          <input type="email" id="email" placeholder="your@email.com" required>
+        </div>
+        <div class="field">
+          <label for="message">Сообщение</label>
+          <textarea id="message" placeholder="Расскажите о вашей задаче..." required></textarea>
+        </div>
+        <button type="submit" class="btn btn-primary" style="justify-content:center;">
+          <span>Отправить сообщение →</span>
+        </button>
+        <p class="form-hint">Письмо откроется в вашем почтовом клиенте</p>
+      </form>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="container">
+    © 2026 <span class="gradient-text">ecl1pse</span>
+  </div>
+</footer>
+
+<script>
+  function scrollToSection(id) {
+    var el = document.getElementById(id);
+    if (el) {
+      var top = el.getBoundingClientRect().top + window.pageYOffset;
+      window.scrollTo({ top: top, behavior: 'smooth' });
+    }
+  }
+
+  if ('IntersectionObserver' in window) {
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry, i) => {
+        if (entry.isIntersecting) {
+          setTimeout(() => entry.target.classList.add('visible'), i * 80);
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.12 });
+
+    document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+  } else {
+    document.querySelectorAll('.fade-in').forEach(el => el.classList.add('visible'));
+  }
+
+  const MY_EMAIL = 'ecl1pse.dev@mail.ru';
+
+  function sendMessage(e) {
+    e.preventDefault();
+    const name = document.getElementById('name').value.trim();
+    const email = document.getElementById('email').value.trim();
+    const msg = document.getElementById('message').value.trim();
+
+    const subject = encodeURIComponent('Сообщение с сайта от ' + name);
+    const body = encodeURIComponent(
+      'Привет, ecl1pse!\n\n' + msg + '\n\n---\nИмя: ' + name + '\nEmail: ' + email
+    );
+
+    window.location.href = 'mailto:' + MY_EMAIL + '?subject=' + subject + '&body=' + body;
+  }
+</script>
+
+</body>
+</html>
